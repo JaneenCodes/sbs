@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RequestController;
+use App\Models\Request;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,6 +30,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('{booking}/destroy', [BookingController::class, 'destroy'])->name('bookings.destroy');
     });
 
+    Route::prefix('appointments')->group(function (){
+        Route::get('/', [AppointmentsController::class, 'index'])->name('appointments');
+        Route::post('{booking}/store', [AppointmentsController::class, 'store'])->name('appointments.store');
+
+
+    });
     
 });
 

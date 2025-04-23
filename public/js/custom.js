@@ -7,40 +7,55 @@ $(function() {
         $('#create-modal').modal('show');    
     });
    
-    // $('#create-form').on('submit', function(e) {
-    //     e.preventDefault();
-    
-    //     let name = $('#create-form').find('#name').val(),
-    //         quantity = $('#create-form').find('#quantity').val(),
-    //         price = $('#create-form').find('#price').val(),
-    //         supplier = $('#create-form').find('#supplier').val();
+    $(document).on('click', '.request-btn', function() {
+        let bookingId = $(this).attr('data-id'),
+            domain = window.location.origin; 
 
-    //     $.ajax({
-    //         url: $(this).attr('action'),
-    //         type: "POST",
-    //         data: {name, quantity, price, supplier},
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         success: function(response) {
-    //             if (response.success) {
-    //                 $('#create-modal').modal('hide');
-    //                 $.ajax({
-    //                     url: '/products/list',
-    //                     type: 'GET',
-    //                     success: function(newList) {
-    //                         $('#product-list').html(newList); 
-    //                     },
-    //                     error: function() {
-    //                         alert('Error fetching updated product list.');
-    //                     }
-    //                 });
-    //             } else {
-    //                 alert('Error adding the product!');
-    //             }
-    //         }          
-    //     });
-    // });
+        console.log(bookingId);
+        $('#request-form').attr('action', domain + '/appointments/' + bookingId + '/store');   
+        $('#request-modal').modal('show');    
+    });
+   
+    $('#request-form').on('submit', function(e) {
+        e.preventDefault();
+    
+        let name = $('#request-form').find('#name').val(),
+            contact = $('#request-form').find('#contact').val(),
+            address = $('#request-form').find('#address').val(),
+            borrowed_at = $('#request-form').find('#borrowed_at').val(),
+            returned_at = $('#request-form').find('#returned_at').val();
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: "POST",
+            data: {name, contact, address, borrowed_at, returned_at},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function() 
+            {              
+                $('#request-modal').modal('hide');
+                window.location.reload();                                    
+            },error: function(xhr, status, error) 
+                {
+                    let oData = xhr.responseJSON.errors,
+                        html = '';
+
+                        for (let i in oData) {
+                            let element = oData[i];
+                            html += '<li>' + element[0] + '</li>';                 
+                        }    
+
+                        $('#request-modal').find('.error-messages').prop('hidden', false);  
+                        $('#request-modal').find('.error-messages').html(html);                    
+                }                
+        });
+    });
+
+
+
+
+
 
 })
 

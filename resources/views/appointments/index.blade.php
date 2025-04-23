@@ -1,0 +1,89 @@
+@extends('layouts.master')
+
+@section('content')
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center mb-3">Requests</h1>
+
+                <table class="table table-bordered table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Borrow Date</th>
+                            <th>Return Date</th>
+                            @auth
+                                @if(auth()->user()->role == 'user')
+                                    <th class="text-center">Status</th>
+                                @endif
+                            @endauth
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($appointments as $appointment)
+                            <tr>
+                                <td>{{ $appointment->id }}</td>
+                                <td>{{ $appointment->name }}</td>
+                                <td>{{ $appointment->contact }}</td>
+                                <td>{{ $appointment->address }}</td>
+                                <td>{{ $appointment->borrowed_at }}</td>
+                                <td>{{ $appointment->returned_at }}</td>
+                                @auth
+                                    @if(auth()->user()->role == 'user')
+                                        <td class="text-center">{{ $appointment->status == "0" ? "Pending" : ($appointment->status == "1" ? "Approved" : "Declined") }}</td>
+                                    @endif
+                                @endauth
+
+                                @auth
+                                    @if(auth()->user()->role == 'user')
+                                        <td class="text-center">  
+                                            <button 
+                                            type="button" 
+                                            class="cancel-btn btn btn-danger btn-sm">
+                                                Cancel
+                                            </button> 
+                                        </td>
+                                    @endif
+                                @endauth         
+
+                                @auth
+                                    @if(auth()->user()->role == 'admin')
+                                        <td class="text-center">  
+                                            <button 
+                                            type="button" 
+                                            class="cancel-btn btn btn-primary btn-sm">
+                                                Approve
+                                            </button> 
+
+                                            <button 
+                                            type="button" 
+                                            class="cancel-btn btn btn-danger btn-sm">
+                                                Decline
+                                            </button> 
+                                        </td>                                              
+                                    @endif
+                                @endauth                                  
+                            </tr>                          
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center">No records found.</td>
+                            </tr>                           
+                        @endforelse
+                        
+                                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script src="{{asset("js/jquery-3.7.1.min.js")}}" ></script>
+<script src="{{asset("js/custom.js")}}" ></script>
+
+@endsection
+

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
 {
@@ -12,9 +14,11 @@ class BookingController extends Controller
      */
     public function index()
     {
-        
+        $data = [
+            'bookings' => Booking::latest()->get(),
+        ];
 
-        return view('bookings.index');
+        return view('bookings.index', $data);
     }
 
     /**
@@ -30,7 +34,33 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'type' => 'required',
+            'description' => 'required',
+        ]);
+
+        $code = $this->randomId();
+        $booking = Booking::create([
+            'code' => $code,
+            'name' => $data['name'],          
+            'type' => $data['type'],
+            'description' => $data['description'],
+        ]);
+
+        return redirect()->route('bookings', $booking)->with('success', 'Booking Created Successfully');
+    }
+
+    private function randomId()
+    {
+        $code = Str::random(4);
+        $validator = Validator::make(['code'=>$code],['code'=>'unique:bookings,code']);
+
+        if($validator->fails()){
+            return $this->randomId();
+        }
+
+        return $code;
     }
 
     /**
