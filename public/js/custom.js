@@ -6,6 +6,22 @@ $(function() {
         $('#create-form').attr('action', domainUrl + '/bookings/store');
         $('#create-modal').modal('show');    
     });
+
+    $(document).on('click', '.edit-btn', function () {
+        let bookingId = $(this).attr('data-id'),
+            bookingName = $(this).attr('data-name'),
+            bookingType = $(this).attr('data-type'),
+            bookingDescription = $(this).attr('data-description'),
+            domainUrl = window.location.origin;
+
+            $('#edit-form').attr('action', domainUrl +'/bookings/' + bookingId+ '/update')
+
+            $('#edit-modal').find('#name').val(bookingName);
+            $('#edit-modal').find('#type').val(bookingType);
+            $('#edit-modal').find('#description').val(bookingDescription);
+
+            $('#edit-modal').modal('show');
+    });
    
     $(document).on('click', '.request-btn', function() {
         let bookingId = $(this).attr('data-id'),

@@ -26,13 +26,16 @@ Route::middleware('auth')->group(function () {
         Route::get('create', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('store', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('edit', [BookingController::class, 'edit'])->name('bookings.edit');
-        Route::patch('{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
+        Route::post('{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
         Route::delete('{booking}/destroy', [BookingController::class, 'destroy'])->name('bookings.destroy');
     });
 
     Route::prefix('appointments')->group(function (){
         Route::get('/', [AppointmentsController::class, 'index'])->name('appointments');
         Route::post('{booking}/store', [AppointmentsController::class, 'store'])->name('appointments.store');
+        Route::get('{id}/approve_book', [AppointmentsController::class, 'approve_book'])->name('appointments.approve_book');
+        Route::get('{id}/decline_book', [AppointmentsController::class, 'decline_book'])->name('appointments.decline_book');
+        Route::get('{id}/cancel_book', [AppointmentsController::class, 'cancel_book'])->name('appointments.cancel_book');
 
 
     });

@@ -13,8 +13,9 @@ class AppointmentsController extends Controller
      */
     public function index()
     {
+        $appointments = Appointments::with('booking')->get();
         $data = [
-            'appointments' => Appointments::all(),
+            'appointments' => $appointments,
         ];
         return view('appointments.index', $data);
     }
@@ -35,7 +36,7 @@ class AppointmentsController extends Controller
 
         $data = $request->validate([
             'name' => 'required',
-            'contact' => 'required',
+            'contact' => 'required|min:11|max:11',
             'address' => 'required',
             'borrowed_at' => 'required|date',
             'returned_at' => 'required|date|after:borrowed_at',
@@ -51,6 +52,39 @@ class AppointmentsController extends Controller
         ]);
 
         return response()->json(['success' => true, $appointments,]);
+    }
+
+    public function approve_book($id)
+    {
+        $appointments = Appointments::findOrFail($id);
+        $appointments->update(['status' => '1']);
+
+        $booking = Booking::findOrFail($appointments->booking_id);
+        $booking->update(['status' => '1']);
+
+        return redirect()->route('appointments')->with('success', 'Booking approved successfully');
+    }
+
+    public function decline_book($id)
+    {
+        $appointments = Appointments::findOrFail($id);
+        $appointments->update(['status' => '2']);
+
+        $booking = Booking::findOrFail($appointments->booking_id);
+        $booking->update(['status' => '0']);
+
+        return redirect()->route('appointments')->with('success', 'Booking declined successfully');
+    }
+
+    public function cancel_book($id)
+    {
+        $appointments = Appointments::findOrFail($id);
+        $appointments->update(['status' => '3']);
+
+        $booking = Booking::findOrFail($appointments->booking_id);
+        $booking->update(['status' => '0']);
+
+        return redirect()->route('appointments')->with('success', 'Booking cancelled successfully');
     }
 
     /**

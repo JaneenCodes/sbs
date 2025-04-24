@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('address');
             $table->dateTime('borrowed_at');
             $table->dateTime('returned_at');
-            $table->integer('status')->default(0); // 0 = pending, 1 = approved, 2 = rejected
+            $table->integer('status')->default(0); // 0 = pending, 1 = approved, 2 = declined, 3 = canceled
             $table->timestamps();
         });
     }

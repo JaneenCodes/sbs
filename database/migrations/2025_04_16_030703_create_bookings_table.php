@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('type');
             $table->text('description');
-            $table->integer('status')->default('0');
+            $table->integer('status')->default('0'); //available = 0, not available = 1
             $table->timestamps();
         });
     }

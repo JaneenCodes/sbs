@@ -84,7 +84,19 @@ class BookingController extends Controller
      */
     public function update(Request $request, Booking $booking)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'type' => 'required',
+            'description' => 'required',
+        ]);
+
+        $booking->update([
+            'name' => $data['name'],          
+            'type' => $data['type'],
+            'description' => $data['description'],
+        ]);
+
+        return redirect()->route('bookings', $booking)->with('success', 'Booking Updated Successfully');
     }
 
     /**
@@ -92,6 +104,7 @@ class BookingController extends Controller
      */
     public function destroy(Booking $booking)
     {
-        //
+        $booking->delete();
+        return redirect()->route('bookings')->with('success', 'Booking deleted successfully!');
     }
 }
