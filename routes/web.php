@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Models\Request;
@@ -12,9 +13,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,8 +42,6 @@ Route::middleware('auth')->group(function () {
         Route::get('{id}/approve_book', [AppointmentsController::class, 'approve_book'])->name('appointments.approve_book');
         Route::get('{id}/decline_book', [AppointmentsController::class, 'decline_book'])->name('appointments.decline_book');
         Route::get('{id}/cancel_book', [AppointmentsController::class, 'cancel_book'])->name('appointments.cancel_book');
-
-
     });
     
 });
