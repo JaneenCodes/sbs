@@ -14,8 +14,10 @@ class BookingController extends Controller
      */
     public function index()
     {
+        $bookings = Booking::latest()->paginate(10);
+        
         $data = [
-            'bookings' => Booking::latest()->get(),
+            'bookings' => $bookings,
         ];
 
         return view('bookings.index', $data);

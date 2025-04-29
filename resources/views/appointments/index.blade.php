@@ -11,6 +11,7 @@
                     <thead>
                         <tr>
                             <th>Booking ID</th>
+                            <th>Booking Name</th>
                             <th>Name</th>
                             <th>Contact</th>
                             <th>Address</th>
@@ -24,6 +25,7 @@
                         @forelse ($appointments as $appointment)
                             <tr>
                                 <td>{{ $appointment->booking->code }}</td>
+                                <td>{{ $appointment->booking->name }}</td>
                                 <td>{{ $appointment->name }}</td>
                                 <td>{{ $appointment->contact }}</td>
                                 <td>{{ $appointment->address }}</td>
@@ -55,28 +57,34 @@
 
                                 @auth
                                     @if(auth()->user()->role == 'admin')
-                                        <td class="text-center">
-                                            <a 
-                                                href="{{route('appointments.approve_book', $appointment->id)}}" 
-                                                class="btn btn-primary btn-sm" 
-                                                onclick="return confirm('Are you sure you want to approve this book?')">Approve
-                                            </a>  
-                                            <a 
-                                                href="{{route('appointments.decline_book', $appointment->id)}}" 
-                                                class="btn btn-danger btn-sm" 
-                                                onclick="return confirm('Are you sure you want to decline this book?')">Decline
-                                            </a>  
+                                        <td class="text-center">                                           
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-primary approve-btn" 
+                                                        onclick="return confirm('Are you sure you want to approve this booking?')" 
+                                                        data-id="{{$appointment->id}}"
+                                                        {{ $appointment->status == "0" ? "enabled" : "disabled" }}>Approve
+                                                </button>
+
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-danger decline-btn" 
+                                                        onclick="return confirm('Are you sure you want to decline this booking?')" 
+                                                        data-id="{{$appointment->id}}"
+                                                        {{ $appointment->status == "0" ? "enabled" : "disabled" }}>Decline
+                                                </button>
                                         </td>                                              
                                     @endif
                                 @endauth                                  
                             </tr>                          
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center">No records found.</td>
+                                <td colspan="9" class="text-center">No records found.</td>
                             </tr>                           
                         @endforelse                                  
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                {{ $appointments->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>

@@ -13,7 +13,7 @@ class AppointmentsController extends Controller
      */
     public function index()
     {
-        $appointments = Appointments::with('booking')->get();
+        $appointments = Appointments::with('booking')->latest()->paginate(10);
         $data = [
             'appointments' => $appointments,
         ];
@@ -51,7 +51,7 @@ class AppointmentsController extends Controller
             'returned_at' => $data['returned_at'],
         ]);
 
-        return response()->json(['success' => true, $appointments,]);
+        return response()->json(['success' => true, $appointments, 'nelson' => 'try']);
     }
 
     public function approve_book($id)

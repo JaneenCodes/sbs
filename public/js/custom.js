@@ -24,7 +24,7 @@ $(function() {
     });
    
     $(document).on('click', '.request-btn', function() {
-        let bookingId = $(this).attr('data-id'),
+        let bookingId = $(this).attr('data-id');
             domain = window.location.origin; 
 
         console.log(bookingId);
@@ -51,7 +51,7 @@ $(function() {
             success: function() 
             {              
                 $('#request-modal').modal('hide');
-                window.location.reload();                                    
+                window.location.href=domain + '/appointments';                                    
             },error: function(xhr, status, error) 
                 {
                     let oData = xhr.responseJSON.errors,
@@ -68,10 +68,18 @@ $(function() {
         });
     });
 
+    $(document).on('click', '.approve-btn', function(){
+        let bookingId = $(this).attr('data-id'),
+            domainUrl = window.location.origin; 
 
+            window.location.href = domainUrl + '/appointments/' + bookingId + '/approve_book';  
+    });
 
+    $(document).on('click', '.decline-btn', function(){
+        let bookingId = $(this).attr('data-id'),
+            domainUrl = window.location.origin; 
 
-
+            window.location.href = domainUrl + '/appointments/' + bookingId + '/decline_book';
+    });
 
 })
-
